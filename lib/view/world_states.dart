@@ -23,15 +23,6 @@ class _WorldStateScreenState extends State<WorldStateScreen>
     _controller.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    Timer(
-        const Duration(seconds: 5),
-        () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => WorldStateScreen())));
-  }
-
   final colorList = <Color>[
     Colors.blue,
     Colors.green,
