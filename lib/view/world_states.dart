@@ -1,8 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:covid_19_tracker/services/states_services.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+
+import '../model/world_state_model.dart';
 
 class WorldStateScreen extends StatefulWidget {
   const WorldStateScreen({super.key});
@@ -31,6 +34,7 @@ class _WorldStateScreenState extends State<WorldStateScreen>
 
   @override
   Widget build(BuildContext context) {
+    StateServices stateServices = StateServices();
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -38,34 +42,88 @@ class _WorldStateScreenState extends State<WorldStateScreen>
         child: Column(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            PieChart(
-              chartRadius: MediaQuery.of(context).size.width / 3.2,
-              legendOptions: LegendOptions(legendPosition: LegendPosition.left),
-              dataMap: {"Total": 20, "Recovered": 55, "Deaths": 5},
-              animationDuration: const Duration(milliseconds: 1200),
-              chartType: ChartType.ring,
-              colorList: colorList,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.06),
-              child: Card(
-                child: Column(children: [
-                  ReusableRow(title: "total", value: '200'),
-                  ReusableRow(title: "total", value: '200'),
-                  ReusableRow(title: "total", value: '200'),
-                ]),
-              ),
-            ),
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Color(0xff1aa260),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Center(
-                child: Text('Track Countires'),
-              ),
-            )
+            FutureBuilder(
+                future: stateServices.fecthWorldStateRecords(),
+                builder: (context, AsyncSnapshot<WorldStateModel> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Expanded(
+                      flex: 1,
+                      child: SpinKitFadingCircle(
+                        color: Colors.white,
+                        size: 50.0,
+                        controller: _controller,
+                      ),
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        PieChart(
+                          chartRadius: MediaQuery.of(context).size.width / 3.2,
+                          legendOptions: LegendOptions(
+                              legendPosition: LegendPosition.left),
+                          dataMap: {
+                            "Total":
+                                double.parse(snapshot.data!.cases!.toString()),
+                            "Recovered": double.parse(
+                                snapshot.data!.recovered.toString()),
+                            "Deaths":
+                                double.parse(snapshot.data!.deaths.toString()),
+                          },
+                          chartValuesOptions: ChartValuesOptions(
+                              showChartValuesInPercentage: true),
+                          animationDuration: const Duration(milliseconds: 1200),
+                          chartType: ChartType.ring,
+                          colorList: colorList,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical:
+                                  MediaQuery.of(context).size.height * 0.06),
+                          child: Card(
+                            child: Column(children: [
+                              ReusableRow(
+                                  title: "total",
+                                  value: snapshot.data!.cases.toString()),
+                              ReusableRow(
+                                  title: "Deaths",
+                                  value: snapshot.data!.deaths.toString()),
+                              ReusableRow(
+                                  title: "Recovered",
+                                  value: snapshot.data!.recovered.toString()),
+                              ReusableRow(
+                                  title: "Active",
+                                  value: snapshot.data!.active.toString()),
+                              ReusableRow(
+                                  title: "Critical",
+                                  value: snapshot.data!.critical.toString()),
+                              ReusableRow(
+                                  title: "Today Deaths",
+                                  value: snapshot.data!.todayDeaths.toString()),
+                              ReusableRow(
+                                  title: "Today Recovered",
+                                  value:
+                                      snapshot.data!.todayRecovered.toString()),
+                              ReusableRow(
+                                  title: "Today Cases",
+                                  value: snapshot.data!.todayCases.toString()),
+                            ]),
+                          ),
+                        ),
+                        GestureDetector(
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Color(0xff1aa260),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: const Center(
+                              child: Text('Track Countires'),
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                }),
           ],
         ),
       ),
