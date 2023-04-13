@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'package:covid_19_tracker/view/countries_list.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -44,9 +43,13 @@ class _WorldStateScreenState extends State<WorldStateScreen>
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             FutureBuilder(
-                future: stateServices.fecthWorldStateRecords(),
+                future: stateServices
+                    .fecthWorldStateRecords()
+                    .timeout(Duration(seconds: 10)),
                 builder: (context, AsyncSnapshot<WorldStateModel> snapshot) {
-                  if (!snapshot.hasData) {
+                  if (snapshot.hasError) {
+                    return Text('error${snapshot.hasError}');
+                  } else if (!snapshot.hasData) {
                     return Expanded(
                       flex: 1,
                       child: SpinKitFadingCircle(
