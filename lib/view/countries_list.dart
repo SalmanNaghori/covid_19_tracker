@@ -1,4 +1,5 @@
 import 'package:covid_19_tracker/services/states_services.dart';
+import 'package:covid_19_tracker/view/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -78,34 +79,94 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
                     String name = snapshot.data![index]['country'];
 
                     if (searchController.text.isEmpty) {
-                      return Column(
-                        children: [
-                          ListTile(
-                            title: Text(snapshot.data![index]['country']),
-                            subtitle:
-                                Text(snapshot.data![index]['cases'].toString()),
-                            leading: Image(
-                                height: 50,
-                                width: 50,
-                                image: NetworkImage(snapshot.data![index]
-                                    ['countryInfo']['flag'])),
-                          )
-                        ],
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(
+                                        name: snapshot.data![index]['country'],
+                                        image: snapshot.data![index]
+                                            ['countryInfo']['flag'],
+                                        active: snapshot.data![index]['active'],
+                                        totalCases: snapshot.data![index]
+                                            ['cases'],
+                                        todayRecovered: snapshot.data![index]
+                                            ['todayRecovered'],
+                                        totalDeaths: snapshot.data![index]
+                                            ['deaths'],
+                                        test: snapshot.data![index]['test'],
+                                        critical: snapshot.data![index]
+                                            ['critical'],
+                                        totalRecovered: snapshot.data![index]
+                                            ['eecovered'],
+                                      )));
+                        },
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text(snapshot.data![index]['country']),
+                              subtitle: Text(
+                                  snapshot.data![index]['cases'].toString()),
+                              leading: CircleAvatar(
+                                radius: 50,
+                                child: FadeInImage.assetNetwork(
+                                  placeholder: 'assets/images/clip.png',
+                                  image: snapshot.data![index]['countryInfo']
+                                      ['flag'],
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       );
                     } else if (name
                         .toLowerCase()
                         .contains(searchController.text.toLowerCase())) {
                       return Column(
                         children: [
-                          ListTile(
-                            title: Text(snapshot.data![index]['country']),
-                            subtitle:
-                                Text(snapshot.data![index]['cases'].toString()),
-                            leading: Image(
-                                height: 50,
-                                width: 50,
-                                image: NetworkImage(snapshot.data![index]
-                                    ['countryInfo']['flag'])),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailsScreen(
+                                            name: snapshot.data![index]
+                                                ['country'],
+                                            image: snapshot.data![index]
+                                                ['countryInfo']['flag'],
+                                            active: snapshot.data![index]
+                                                ['active'],
+                                            totalCases: snapshot.data![index]
+                                                ['cases'],
+                                            todayRecovered: snapshot
+                                                .data![index]['todayRecovered'],
+                                            totalDeaths: snapshot.data![index]
+                                                ['deaths'],
+                                            test: snapshot.data![index]['test'],
+                                            critical: snapshot.data![index]
+                                                ['critical'],
+                                            totalRecovered: snapshot
+                                                .data![index]['eecovered'],
+                                          )));
+                            },
+                            child: ListTile(
+                              title: Text(snapshot.data![index]['country']),
+                              subtitle: Text(
+                                  snapshot.data![index]['cases'].toString()),
+                              leading: CircleAvatar(
+                                radius: 50,
+                                child: FadeInImage.assetNetwork(
+                                  placeholder: 'assets/images/clip.png',
+                                  image: snapshot.data![index]['countryInfo']
+                                      ['flag'],
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                            ),
                           )
                         ],
                       );
