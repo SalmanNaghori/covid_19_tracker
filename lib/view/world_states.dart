@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
+import 'package:covid_19_tracker/view/countries_list.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:covid_19_tracker/services/states_services.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,8 @@ class _WorldStateScreenState extends State<WorldStateScreen>
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   final colorList = <Color>[
@@ -110,6 +111,13 @@ class _WorldStateScreenState extends State<WorldStateScreen>
                           ),
                         ),
                         GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CountriesListScreen()));
+                          },
                           child: Container(
                             height: 50,
                             decoration: BoxDecoration(
