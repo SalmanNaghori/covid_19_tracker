@@ -3,7 +3,7 @@
 
 <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="covid_19_tracker"
+        android:label="Covid-19 Tracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
