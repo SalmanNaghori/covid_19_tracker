@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:covid_19_tracker/services/states_services.dart';
 import 'package:covid_19_tracker/view/detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,6 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
                           baseColor: Colors.grey.shade700,
                           highlightColor: Colors.grey.shade100);
                     });
-                ;
               } else {
                 return ListView.builder(
                   itemCount: snapshot.data!.length,
@@ -108,15 +108,23 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
                               title: Text(snapshot.data![index]['country']),
                               subtitle: Text(
                                   snapshot.data![index]['cases'].toString()),
-                              leading: CircleAvatar(
-                                radius: 50,
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: 'assets/images/clip.png',
-                                  image: snapshot.data![index]['countryInfo']
-                                      ['flag'],
-                                  height: 50,
-                                  width: 50,
+                              leading: CachedNetworkImage(
+                                imageUrl: snapshot.data![index]['countryInfo']
+                                    ['flag'],
+                                placeholder: (context, url) =>
+                                    const CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      AssetImage('assets/images/clip.png'),
                                 ),
+                                imageBuilder: (context, imageProvider) =>
+                                    CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: imageProvider,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                fit: BoxFit.cover,
                               ),
                             )
                           ],
@@ -153,20 +161,27 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
                                           )));
                             },
                             child: ListTile(
-                              title: Text(snapshot.data![index]['country']),
-                              subtitle: Text(
-                                  snapshot.data![index]['cases'].toString()),
-                              leading: CircleAvatar(
-                                radius: 50,
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: 'assets/images/clip.png',
-                                  image: snapshot.data![index]['countryInfo']
+                                title: Text(snapshot.data![index]['country']),
+                                subtitle: Text(
+                                    snapshot.data![index]['cases'].toString()),
+                                leading: CachedNetworkImage(
+                                  imageUrl: snapshot.data![index]['countryInfo']
                                       ['flag'],
-                                  height: 50,
-                                  width: 50,
-                                ),
-                              ),
-                            ),
+                                  placeholder: (context, url) =>
+                                      const CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage:
+                                        AssetImage('assets/images/clip.png'),
+                                  ),
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                )),
                           )
                         ],
                       );
