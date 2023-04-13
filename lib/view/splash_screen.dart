@@ -20,8 +20,8 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -29,8 +29,11 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     Timer(
         const Duration(seconds: 5),
-        () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => WorldStateScreen())));
+        () => Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => WorldStateScreen()),
+              (route) => false,
+            ));
   }
 
   @override
